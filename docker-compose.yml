@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+    app: 
+        build:
+            context: .
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./app:/app # Map the app directory in our project to the same directory in our image
+        command: >
+            sh -c "python manage.py runserver 0.0.0.0:8000"
