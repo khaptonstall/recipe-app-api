@@ -6,7 +6,14 @@ ENV PYTHONUNBUFFERED 1
 
 # Copy the local requirements file onto the Docker image
 COPY ./requirements.txt /requirements.txt
+# Use alpine's package manager (apk) to add postgres. Use --no-cache to avoid storing extra files on our Docker container.
+RUN apk add --update --no-cache postgresql-client
+# Install necessary dependencies temporarily
+RUN apk add --update --no-cache --virtual .tmp-build-deps \
+    gcc libc-dev linux-headers postgresql-dev
 RUN pip install -r /requirements.txt
+# Delete the above temperorary dependencies
+RUN apk del .tmp-build-deps
 
 # Create empty folder on our Docker image call /app
 RUN mkdir /app
